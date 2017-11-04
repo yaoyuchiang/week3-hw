@@ -1,0 +1,196 @@
+           
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <script src="https://d3js.org/d3.v3.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+    
+     <script>
+        
+        var arr = [85, 60, 99, 49, 77, 82];
+
+        bind(arr);
+
+
+        function bind(data) {
+            var selection = d3.select("body")
+                .selectAll("div")
+                .data(data);
+
+            selection.enter().append("div");
+            selection.exit().remove();
+        }
+
+
+
+        for (i = 0; i < arr.length; i=i+1) {
+            if (arr[i] < 70) {
+                d3.select("body").append("div").text(function(d) {
+                    return (i+1 ) + ":" + arr[i]
+                }).style({
+                    "color": "red"
+                })}
+
+                else {
+                    d3.select("body").append("div").text(function(d) {
+                        return (i+1 ) + ":" + arr[i]
+                    }).style({
+                        "color": "black"
+                    })
+                }
+            
+        }
+    </script>
+
+
+    
+     <script>
+        var arr = [85, 60, 99, 49, 77, 82];
+
+        var w = 630,
+            h = 300,
+            p = 100;
+        var body = d3.select("body");
+
+        svg();
+
+        bind(arr);
+
+        render();
+
+
+        function svg() {
+            body.append("svg")
+                .attr({
+            
+                    width: w,
+                    height: h
+                })
+
+        }
+
+        function bind(dataSet) {
+            var selection = body.select("svg")
+                .selectAll("rect")
+                .data(dataSet);
+
+            selection.enter().append("rect");
+            selection.exit().remove();
+
+            var selection_t = body.select("svg")
+                .selectAll("text")
+                .data(dataSet);
+
+            selection_t.enter().append("text");
+            selection_t.exit().remove();
+
+        }
+
+        function render() {
+            
+
+            body.select("svg")
+                .selectAll("rect")
+                .attr({
+                    x: function(d, i) {
+                        return p + 45 * i
+                    },
+                    y: function(d) {
+                        return h - p - d
+                    },
+                    width: 40,
+                    height: function(d) {
+                        return d
+                    },
+                    fill: function(d) {
+                        if (d < 70) {
+                            return "red";
+                        } else {
+                            return "lightgreen"
+                        }
+                    }
+
+
+                })
+
+            body.select("svg")
+                .selectAll("text")
+                .attr({
+                    x: function(d, i) {
+                        return (p + 20) + 45 * i
+                    },
+                    y: h - p + 20,
+                    "text-anchor": "middle"
+                }).text(function(d) {
+                    return d;
+                })
+
+
+
+
+        }
+
+        function update() {
+            var num = random(10, 100);
+            arr.push(num);
+            bind(arr);
+            render();
+        }
+
+        function kickItem() {
+            arr.shift();
+            bind(arr);
+            render();
+        }
+
+        function random(n, m) {
+            return Math.floor(Math.random() * (m - n + 1) + n);
+        }
+    </script>
+
+    <div class="forbutton">
+        <input type="button" onclick="update()" value="新增">
+        <input type="button" onclick="kickItem()" value="移除">
+
+    </div>
+    
+    <div id="party">
+   
+        
+    </div>
+    
+    <select name="partycolor" onchange="partycolor(this.value)">
+        <option value="1">國民黨</option>
+        <option value="2">民進黨</option>
+        <option value="3">時代力量</option>
+        <option value="4">無黨</option>
+        <option value="5">親民黨</option>
+    </select>
+    
+    <script>
+     var index = [1, 2 ,3,4,5];
+    var color = ["blue", "green", "yellow", "gray", "orange"];
+        
+         var vScale = d3.scale.ordinal()
+    .domain(index)
+    .range(color);
+    
+    function partycolor(value){
+        d3.select("#party")
+        .style({
+            background: vScale(value)
+        });
+    }
+        
+        
+    </script>
+
+
+</body>
+</html>
